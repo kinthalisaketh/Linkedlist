@@ -1,122 +1,89 @@
-# Linkedlist
-//
-//  main.cpp
-//  linked lists
-//
-//
-
-#include <iostream>
-using namespace::std;
+#include<iostream>
+#include<stdlib.h>
+using namespace std;
 struct Node{
     int data;
     struct Node *next;
-}*start=NULL;
-void create(int A[],int n){
+}*first = NULL;
+void create(int A[], int n){
     int i;
-    struct Node *t,*last;
-    start=new struct Node;
-    start->data=A[0];
-    start->next=NULL;
-    last=start;
-    
-    for(i=1;i<n;i++){
-        t=new struct Node;
+    struct Node *t, *last;
+    first = new Node;
+    first->data=A[0];
+    first->next=NULL;
+    last=first;
+    for(i=1; i<n; i++){
+        t=new Node;
         t->data=A[i];
         t->next=NULL;
         last->next=t;
         last=t;
     }
-}
+    }    
 void display(struct Node *p){
-    while (p!=NULL) {
-        cout<<"->"<<p->data;
+    while(p!=NULL){
+        cout<<p->data<<" ";
         p=p->next;
+        }
+        cout<<endl;
     }
-    cout<<endl;
-}
-void Rdisplay(struct Node *p)
-{
-    
-    if(p!=NULL)
-    {
+void Rdisplay(struct Node *p){
+    if(p!=NULL){
         Rdisplay(p->next);
-        cout<<"<-"<<p->data;
+        cout<<p->data<<" ";
     }
 }
-void ins_in_middle(int pos,int val){
-    struct Node *newnode=new struct Node;
-    struct Node *temp=start;
-    for(int i=2;i<pos;i++){
-        if(temp->next != NULL){
-            temp=temp->next;
+void insert(int pos, int x){
+    if(pos<0) return;
+     struct Node *t= new Node;
+     t->data=x;
+     t->next=NULL;
+     if(pos==0){
+         t->next=first;
+         first=t;
+    }else{
+        struct Node *p=first;
+        for(int i=1; i<pos-1 && p!=NULL ;i++){
+            p=p->next;
         }
-    }
-    newnode->data=val;
-    newnode->next=temp->next;
-    temp->next=newnode;
-}
-void search(int num){
-    int count=0;
-    struct Node *p;
-    p=start;
-    while (p->data!=num) {
-        p=p->next;
-        count++;
-    }
-    if(p==NULL){
-        cout<<"number not found"<<endl;
-    }
-    else{
-        cout<<"element found at "<<count+1<<"th place"<<endl;
-    }
-}
-int main() {
-    int n;
-    cout<<"Enter the no.of elements =";
-    cin>>n;
-    int A[n];
-    cout<<"enter the array elements = ";
-    for(int i=0;i<n;i++){
-        cin>>A[i];
-    }
-    create(A,n);
-    int k=0;
-    while (k!=5) {
-        cout<<"--------pick one to execuite---------"<<endl;
-        cout<<"1.display"<<endl
-            <<"2.insert in middle"<<endl
-            <<"3.search an element in list"<<endl
-            <<"4.Reverse display the linked list "<<endl
-            <<"5.exit"<<endl
-            <<"-------------------------------------"<<endl;
-        cin>>k;
-        switch(k){
-            case 1:
-                cout<<"The linked list is = ";
-                display(start);
-                break;
-            case 2:
-                int pos,val;
-                cout<<"enter at which we need to add data and the value of data =";
-                cin>>pos>>val;
-                ins_in_middle(pos, val);
-                cout<<"The new list is = ";
-                display(start);
-                break;
-            case 3:
-                int num;
-                cout<<"Enter the element need to be searhed in linked list = ";
-                cin>>num;
-                search(num);
-                break;
-            case 4:
-                cout<<"The reversed linked list is =";
-                Rdisplay(start);
-                break;
-            case 5:
-                break;
-            default:
-                break;
+        if(p!=NULL){
+            t->next = p->next;
+            p->next =t;
+        }else{
+            delete t;
         }
+            
+        }
+        cout<<endl;
+}
+void deletePos(int pos) {
+    if (pos < 0) return;
+    struct Node *temp = first;
+    if (pos == 0) {
+        if (first != NULL) {
+            first = first->next;
+            delete temp;
+        }
+        return;
     }
+    struct Node *prev = NULL;
+    for (int i = 0; temp != NULL && i < pos; i++) {
+        prev = temp;
+        temp = temp->next;
+    }
+    if (temp == NULL) return;
+    prev->next = temp->next;
+    delete temp; 
+}
+
+int main(){
+    int A[]={1,2,3,4,5,6};
+    create(A,6);
+    display(first);
+    Rdisplay(first);
+    insert(5, 7);
+    display(first);
+    deletePos(1);
+    display(first);
+    return 0;
 }
